@@ -1,62 +1,48 @@
 const express = require("express");
 const router = express.Router();
+const { Genre, validate } = require("../models/genre");
 
-const Joi = require("joi");
-
-const genres = [
-  { id: 1, name: "scary" },
-  { id: 2, name: "funny" },
-  { id: 3, name: "serious" },
-  { id: 4, name: "musical" },
-];
-
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const genres = await Genre.find();
   res.send(genres);
 });
 
-router.get("/:id", (req, res) => {
-  const genre = genres.find((g) => g.id === parseInt(req.params.id));
+router.get("/:id", async (req, res) => {
+  const genre = await Genre.find({ _id: req.params.id });
   if (!genre) return res.status(404).send("course was not found");
   res.send(genre);
 });
 
-router.post("/", (req, res) => {
-  const result = validateGenre(req.body);
-  console.log("result", result);
+router.post("/", async (req, res) => {
+  const result = validate(req.body); // dion't need this validation, can use mongoose validation
+  //console.log("result", result);
   if (result.error) {
     res.status(400).send(result.error.message);
     return;
   }
-
-  const genre = { id: genres.length + 1, name: req.body.name };
-  //have to enable parsing of json objects
-  // see top of file router.use
-  genres.push(genre);
+  let genre = new Genre({ name: req.body.name });
+  await genre.save();
   res.send(genre);
 });
-router.put("/:id", (req, res) => {
-  const genre = genres.find((g) => g.id === parseInt(req.params.id));
-  if (!genre) return res.status(404).send("course was not found");
-  const result = validateGenre(req.body);
-
-  if (result.error) {
-    res.status(400).send(result.error.message);
-    return;
-  }
-  genre.name = req.body.name;
-  res.send(genres);
-});
-router.delete("/:id", (req, res) => {
-  const genre = genres.find((g) => g.id === parseInt(req.params.id));
-  if (!genre) return res.status(404).send("course was not found");
-  index = genres.indexOf(genre);
-  genres.splice(index, 1);
-  res.send(genre);
+router.put("/:id", async (req, res) => {
+  const result = await Genre.update(
+    // should put this in try catch maybe, it crashes if you don't have the right id
+    { _id: req.params.id },
+    { $set: { name: req.params.body } }
+  );
+  // can also use:
+  // const genre = await Genre.findByIdAndUpdate(req.params.id{name:req.body.name},{
+  // new:true  -- this returns the updated object
+  // })
+  //genre.name = req.body.name;
+  //await genre.save();
+  res.send(result);
 });
 
-function validateGenre(genre) {
-  const schema = { name: Joi.string().min(3).required() };
-  return Joi.validate(genre, schema);
-}
+router.delete("/:id", async (req, res) => {
+  const result = await Genre.deleteOne({ _id: req.params.id });
+
+  res.send(result);
+});
 
 module.exports = router;
