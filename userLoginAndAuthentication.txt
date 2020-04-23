@@ -96,5 +96,41 @@ in function validateUser(){
 send the  token to the client with the following in auth.js
  const token = jwt.sign({ _id: user._id }, config.get("jwtPrivateKey"));
  
-  
-  
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+setting response headers
+
+the above code will return the token in the body of the response
+for vidly we want to assume the user is logged in once the account is created
+they dont need email verification
+so we'll return the token in the header when the user is created in the post route
+
+
+const token = jwt.sign({ _id: user._id }, config.get("jwtPrivateKey"));)
+res.header('x-auth-token'//prefix with x and add an arbitrary name , so..
+res.header('x-auth-token', token).send(_.pick (user, ["_id", "name", "email"])); 
+
+store this json webtoken on the client and send it to the server next time you make an api call
+
+
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+encapsulating logic in mongoose models
+in users module a webtoken gets generated, the same code exists in auth.js
+the payload is the same in each file, so the generation should be encapsulated in a single place
+for easier code maintenance
+
+//information expert principle, the object that has the most knowledge should have
+// control over its methods, ie the user object has all of the user properities so
+// the user token generation should occur within the user module
+so add a function there:
+This gets whacky.
+we add a function or a method to the userSchema with:
+userSchema.methods.generateAuthToken = funciton(){
+const token = jwt.sign({_id: this._id},config.get('jwtPrivateKey'))
+}
+
+then call token = user.generateAuthToken() where we need the token
+ie auth.js and users.js
