@@ -134,3 +134,92 @@ const token = jwt.sign({_id: this._id},config.get('jwtPrivateKey'))
 
 then call token = user.generateAuthToken() where we need the token
 ie auth.js and users.js
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+authorization middleware
+
+the router.post should only be authorized by an authenticated user
+so in the post method
+read the header and validate it
+in order to not have to put it at the beginning of every route handler we
+put the auth function in middleware
+create a new folder called middle
+and create a file called auth.js
+function auth(req, res, next){
+const token = req.header('x-auth-token')
+if(!token) res.status(401).send('access denied, no token provided')
+
+try{
+const decoded = jwt.verify(token, config.get('jwtPrivateKey')
+req.user = decoded;
+next(); //next passes control to the next middleware function
+}
+catch(ex){
+res.status(400).send('Invalid token')}
+}
+
+module.exports = auth;
+
+decoded is the decoded payload from the req and will be used to check
+against the payload encoded in user.generateAuthToken
+
+to use the auth middleware function, in the route file you want to protect
+include the auth middleware function
+const auth = require('../middleware/auth')
+and then in the route call, add the middleware
+router.post('/', auth, async(req,res)....)
+
+when testing this don't forget to set the environment variable
+with set vidly_jwtPrivateKey=myprivatkee
+
+
++++++++++++++++++++++++++++++++++++++++++++++
+getting the current user
+creaete a new route, the client has to submit a valid token in the header
+so the header should include
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ..........
+
+
+router.get("/me", auth, async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password");
+  if (!user) return res.status(404).send("user was not found");
+  res.send(user);
+});
+
+will return the user
+-notice it doesnt return the password
+
+logging out only requires that the client deletes the token
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Role Based Authorization
+add user type to user.js
+inSchema add:
+isAdmin:Boolean
+
+then when you generat the authtoke add this property:
+isAdmin: this.isAdmin
+add to middleware 
+admin.js =>
+module.exports = function (req, res, next)
+{
+	if (!req.user.isAdmin) return res.status(403).send(access denied)  // forbidden
+	next();
+}
+use an array in route definitions for multiple middlewares
+
+
+
+create a new user, 
+when you create a new user it generates an auth token, this will have  no isAdmin flag
+add the isAdmin in the database
+authorize the user
+this will create a new token that has the isAdmin boolean
+use this second webtoken for any request that requires admin Priviledges
+ headers: x-auth-token:newToken
+
+get a token with a post to auth.
+check the token with jwt.io
+use this token as the 

@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const { Movie, validate } = require("../models/movie");
 const { Genre } = require("../models/genre");
+const auth = require("../middleware/auth");
 
 router.get("/", async (req, res) => {
   const movies = await Movie.find();
   res.send(movies);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const result = validate(req.body);
   //console.log("result", result);
   if (result.error) {

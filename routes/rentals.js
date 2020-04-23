@@ -5,6 +5,7 @@ const { Rental, validate } = require("../models/rental");
 const { Customer } = require("../models/customer");
 const Fawn = require("fawn");
 const mongoose = require("mongoose");
+const auth = require("../middleware/auth");
 Fawn.init(mongoose); // from line 4
 
 router.get("/", async (req, res) => {
@@ -12,7 +13,7 @@ router.get("/", async (req, res) => {
   res.send(rentals);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const result = validate(req.body);
   //console.log("result", result);
   if (result.error) {

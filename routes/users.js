@@ -1,4 +1,5 @@
 const express = require("express");
+const auth = require("../middleware/auth");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const router = express.Router();
@@ -10,8 +11,8 @@ router.get("/", async (req, res) => {
   res.send(users);
 });
 
-router.get("/:id", async (req, res) => {
-  const user = await User.find({ _id: req.params.id });
+router.get("/me", auth, async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password");
   if (!user) return res.status(404).send("user was not found");
   res.send(user);
 });
@@ -40,7 +41,7 @@ router.post("/", async (req, res) => {
     .header("x-auth-token", token)
     .send(_.pick(user, ["_id", "name", "email"]));
 });
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const result = await User.update(
     // should put this in try catch maybe, it crashes if you don't have the right id
     { _id: req.params.id },
@@ -55,7 +56,7 @@ router.put("/:id", async (req, res) => {
   res.send(result);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const result = await User.deleteOne({ _id: req.params.id });
 
   res.send(result);

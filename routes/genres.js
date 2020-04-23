@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { Genre, validate } = require("../models/genre");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 router.get("/", async (req, res) => {
   const genres = await Genre.find();
@@ -13,7 +15,7 @@ router.get("/:id", async (req, res) => {
   res.send(genre);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const result = validate(req.body); // dion't need this validation, can use mongoose validation
   //console.log("result", result);
   if (result.error) {
@@ -24,7 +26,7 @@ router.post("/", async (req, res) => {
   await genre.save();
   res.send(genre);
 });
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const result = await Genre.update(
     // should put this in try catch maybe, it crashes if you don't have the right id
     { _id: req.params.id },
@@ -39,7 +41,7 @@ router.put("/:id", async (req, res) => {
   res.send(result);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const result = await Genre.deleteOne({ _id: req.params.id });
 
   res.send(result);

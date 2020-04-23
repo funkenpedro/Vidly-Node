@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
 //const mongoose = require("mongoose");
 
 const { Customer, validate } = require("../models/customer");
@@ -15,7 +16,7 @@ router.get("/:id", async (req, res) => {
   res.send(customer);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const result = validate(req.body); // dion't need this validation, can use mongoose validation
   //console.log("result", result);
   if (result.error) {
@@ -30,7 +31,7 @@ router.post("/", async (req, res) => {
   await customer.save();
   res.send(customer);
 });
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const result = await Customer.update(
     // should put this in try catch maybe, it crashes if you don't have the right id
     { _id: req.params.id },
