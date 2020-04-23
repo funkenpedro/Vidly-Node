@@ -72,5 +72,29 @@ in function validateUser(){
  npm i config
  -- this will let you futz with environment variables
  create default.json in config folder in project
+ {
+  "jwtPrivateKey": ""
+}
+
+ create custom-environment-variables.json in config folder
+ {
+  "jwtPrivateKey": "vidly_jwtPrivateKey"
+}
+
+ 
+ 
+ don't forget to invoke config
+ set the environment variable to the desired string for the key in the console:
+ cmd> set vidly_jwtPrivateKey=myPrivateKey
+ 
+ add const config = require("config"); to index.js
+ also add the following to index.js
+ if (!config.get("jwtPrivateKey")) {
+  console.error("FATAL ERROR:jwtPrivateKey");
+  process.exit(1);
+} - this will make the program exit if there is no secret key
+send the  token to the client with the following in auth.js
+ const token = jwt.sign({ _id: user._id }, config.get("jwtPrivateKey"));
+ 
   
   
