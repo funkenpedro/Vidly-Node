@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { User, validate } = require("../models/user");
 const _ = require("lodash");
+const bcrypt = require("bcrypt");
 router.get("/", async (req, res) => {
   const users = await User.find();
   res.send(users);
@@ -27,8 +28,11 @@ router.post("/", async (req, res) => {
     email: req.body.email,
     password: req.body.password,
   });
+  const salt = await bcrypt.genSalt(10); //the higher the number the longer it takes and the more comples the string
+  user.password = await bcrypt.hash(user.password, salt);
   await user.save();
-  res.send(user);
+  _.pick(user, ["name", "email"]);
+  res.send(_.pick(user, ["_id", "name", "email"]));
 });
 router.put("/:id", async (req, res) => {
   const result = await User.update(
