@@ -1,0 +1,76 @@
+Register: POST /api/users{name, email, password}
+Login: POST /api/logins
+
+email:{
+type:String,
+unique:true,
+}
+
+in function validateUser(){
+
+ email: Joi.string().min(3).required().email().max(255),}
+ 
+ User.findOne({email:...}) finds an object in the database if email mathches
+ 
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Lodash.com
+ utility functions for working with various types
+ convention says you call the instantiation of lodash '_' so:
+ const _ = require("lodash");
+ then to use it
+ _.pick(user, ['name', email]) for example
+ 
+ or to pick just the properties you want from a post request use
+ user= new User(_.pick(req.body, ['name', 'email','password'])
+ 
+ joi password comlexity will help validate passwords
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ hashing passwords
+ 
+ use npm i bcrypt
+ const bcrypt = require('bcrypt');
+ to hash you need a salt.
+ a salt is a random string that is inserted before the password is hashed
+ this helps keep the hashing from being deciphered
+ 
+ await salt = bcrypt.genSalt(10) //the higher the number the longer it takes and the more comples the string
+ const hashed = await bcrypt.hash('myPassword', salt)
+ 
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ authenticating users
+ auth.js is usually the name of the file for 
+ 
+ here we created an auth.js file, the crux of the bicky is:
+ const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) return res.status(400).send("Invalid email or password");
+  res.send(true);
+  
+  bcrypt apparently knows what the salt is for comparison. not quite sure how that works?
+  
+  
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  return json webtoken
+  its a long string that identifies a user it is passed to the 
+  user so that next time it makes a request it has to use the token
+  the client will have to store this token, be it a browser or other client  
+  jwt.io => this is a url, check it out
+  it has a token debugger that lets you inspect the token
+  this token has a payload that includes public properties about the user
+  
+  the signature is based on the content and a secret key that is only 
+  available on the server.
+  
+ ++++++++++++++++ generating tokens
+ npm i jsonwebtoken
+ this creates a token
+ const token = jwt.sign({_id: user._id}, 'jwtPrivateKey')
+ -- don't store the private key in the source code, this is just an examplethe 
+ the iat property is time of creation
+ Move the jwtPrivateKey in an environment variable
+ npm i config
+ -- this will let you futz with environment variables
+ create default.json in config folder in project
+  
+  

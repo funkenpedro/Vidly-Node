@@ -4,13 +4,18 @@ const customers = require("./routes/customers");
 const movies = require("./routes/movies");
 const rentals = require("./routes/rentals");
 const users = require("./routes/users");
+const auth = require("./routes/auth");
 const app = express();
+const config = require("config");
 app.use(express.json());
 const Joi = require("joi");
 const logger = require("./logger");
-const auth = require("./authenticate");
-const mongoose = require("mongoose");
 
+const mongoose = require("mongoose");
+if (!config.get("jwtPrivateKey")) {
+  console.error("FATAL ERROR:jwtPrivateKey");
+  process.exit(1);
+}
 //const mongoose = require("mongoose");
 
 app.use(logger);
@@ -21,6 +26,7 @@ app.use("/api/customers", customers); //build database here
 app.use("/api/movies", movies);
 app.use("/api/rentals", rentals);
 app.use("/api/users", users);
+app.use("/api/auth", auth);
 
 mongoose
   .connect("mongodb://localhost/vidly")
