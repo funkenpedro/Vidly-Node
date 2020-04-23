@@ -2,6 +2,8 @@ transactions for mongoose are acheived with
 npm i fawn
 use transactions when performing multiple actions on multiple documents
 to make sure they stay in sync
+check transactions git commit for usage in rentals.js
+
 
 Objectids are 12 bytes, the first 4 bytes are a timestamp
 		next 3 bytes are machine identifier
