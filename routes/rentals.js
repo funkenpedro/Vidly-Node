@@ -3,6 +3,10 @@ const router = express.Router();
 const { Movie } = require("../models/movie");
 const { Rental, validate } = require("../models/rental");
 const { Customer } = require("../models/customer");
+const Fawn = require("fawn");
+const mongoose = require("mongoose");
+Fawn.init(mongoose); // from line 4
+
 router.get("/", async (req, res) => {
   const rentals = await Rental.find().sort("-dateOut");
   res.send(rentals);
@@ -31,10 +35,18 @@ router.post("/", async (req, res) => {
       dailyRentalRate: movie.dailyRentalRate,
     },
   });
-  rental = await rental.save();
-  movie.numberInStock--;
-  movie.save();
-  res.send(rental);
+  try {
+    new Fawn.Task()
+      .save("rentals", rental) // working directly with the collection "rentals" this is ht e first operation
+      .update("movies", { _id: movie._id }, { $inc: { numberInStock: -1 } })
+      .run();
+    //replaces these three lines   rental = await rental.save();
+    //                             movie.numberInStock--;
+    //                             movie.save();
+    res.send(rental);
+  } catch {
+    res.status(500).send("Something Failed");
+  }
 });
 
 module.exports = router;
