@@ -20,3 +20,4 @@ function validateCustomer(customer) {
 
 module.exports.validate = validateCustomer;
 module.exports.Customer = Customer;
+module.exports.customerSchema = customerSchema;
