@@ -1,0 +1,142 @@
+fake an error by stopping mongodb in 
+mongodb terminal? - have to look that one up
+
+
+for errors you should:
+send a friendly error message
+log the error
+
+for promise errors or rejected promise:
+if you use .then, use catch
+if using asyngc and await use try-catch
+
+try{
+mything = await..
+
+}
+catch(ex){
+ res.status(500).send("something failed")
+}
+
+you should centralize this with a new middleware function
+express has a special err middleware function, use this in index.js after all
+the other "use" declarations
+app.use(function(err, req, res, next){
+	res.status(500).send("something failed")
+})
+
+to pass control to the middleware function from the route:
+router.get('/', async(req,res,next)=>)
+try{}
+catch(ex){next(ex)}
+
+next in the catch will refer to app.use(function(error...)
+
+to clean this up,
+add error.js to middleware folder, move the function(error..) to the new file
+don't forget to export it with module.exports
+in index.js add 
+const error = (require('../middleware/error')
+and change the use declaration to:
+
+app.use(error); not app.use(error())
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+removing the try catch
+
+define a
+function asyncMiddleware(handler){
+	return async (req,res,next)=>
+	try{
+	await handler(req, res)
+	}
+	catch(ex){
+		next(ex)
+	}
+}
+change the route handler to:
+
+router.get("/", asyncMiddleware(async (req, res) => {
+  const users = await User.find();
+  res.send(users);
+}));
+
+asyncMiddleWare is like a factory function that returns a function when 
+called. router.get doesn't in a normal setting, actually execute the function
+described, it just holds the description or reference to a function. the expressz
+engine executes the function. so to pass arguments to the middleware, we get the middleware
+to return a function that has the try catch included and express provides the
+arguments when the function is returned and express executes it.
+To simplify, create a new file in middleware called async.js
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+express async errors
+npm package that does the try catch
+npm i express-async-errors
+
+load in index.js 
+require('express-async-errors') - don't assign int to a constant_
+then you don\t have to change anything in your routes and errors witll be handled
+++++++++++++++++++++++++++++++++++++++++
+
+create an error middleware file
+module.exports  = function(err, req, res,next){
+res.status(500).send('something failed')}
+
+use winston for logging
+const winston = require("winston")
+this will use a default logger,
+you can build a custom one if youre app gets really big
+it has the following transports:
+console
+file
+http
+plugins for 
+mongodb
+redis
+loggly
+the default transport logs to console
+to add a transport:
+winston.add(winston.transport.file, {filename:"logfile.log"})
+in error.js middleware add: 
+const winston = require('winston')
+winston.log()
+//error
+
+++++++++++++++++++++++++++++++++++++
+logging to mongodb
+npm i winston-mongodb
+require('winston-mongodb')
+winston.add ...
++++++++++++++++++++++++++++++++++
+uncaught exceptions
+the previous errors are all within the context of express
+to log other exceptions to the log:
+in index.js
+use the following onevent
+process.on('uncaughtException', (ex)=>{
+console.log("We GOT AN EXCEPTIN");
+winston.error(ex.message, ex)})
+
++++++++++++++++++++++++++++++++++++++
+unhandled promise rejections
+
+the former handler only works with synchronous code so for rejected promises you need
+
+const p = Promis.reject(new Error("someething failed miserably"))
+p.then(()=>{console.log("aint gonna get here")})
+because there is no catch here, the process will terminate
+to deal with it
+
+process.on('unhandledRejection', (ex)=>{
+console.log("We GOT AN unhandled rejection");
+winston.error(ex.message, ex)})
+
+You should terminate the process and restart it with process managers
+to terminate use
+process.exit(1)
+
+instead of this you can use 
+winston.handleExceptions(
+new winston.transports.File{{filename:"uncaughtExceptions.log"})
