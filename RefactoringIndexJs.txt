@@ -1,0 +1,9 @@
++++++++++++++++++++++++
+extracting routes from index to  a new folder
+make folder startup
+add a file 
+routes.js=>
+module.exports = function(){
+**put all the routes from index.js (app.use...)
+}
+this function should take app as an argument to be called from index.js

@@ -140,3 +140,10 @@ process.exit(1)
 instead of this you can use 
 winston.handleExceptions(
 new winston.transports.File{{filename:"uncaughtExceptions.log"})
+
+this may only catch uncaught exceptions and not rejected promises
+so you can change the above to:
+
+process.on('unhandledRejection', (ex)=>{
+throw ex); 
+then the winston.handleExceptions will deal with it
