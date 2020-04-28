@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 function createDatabase() {
   mongoose
     .connect("mongodb://localhost/playground")
-    .then(() => console.log("connected to mongodb"))
+    .then(() => console.log("connected to mongodb test messagse"))
     .catch((err) => console.log(err.message));
 
   const genreSchema = new mongoose.Schema({

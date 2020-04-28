@@ -1,0 +1,5 @@
+set environment variables using heroku cle
+
+heroku config:set vidly_jwtPrivateKey=1234
+heroku config: set NODE_ENV=production
+heroku config

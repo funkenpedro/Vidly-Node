@@ -1,0 +1,54 @@
+build a database for testing
+
+
+basically, to test a post, you post something
+and then do a read to make sure it posted properly
+
+in package.json add --verbose to test parameter
+
+you may have to comment out winston stuff in logging.js if things freeze
+
+++++++++++++++++++++++++++
+set up a test database:
+in config folder
+in default.json add a new key: db:""
+get the connection string from the db.js file 
+copy the key,value and add it to test.json and change it to a new name
+
+in db.js add
+require.configand mongoose config.get('db')
+`winston.info(`Connected to {config.get('db')}`)`
+
+if you run node index.js, it will connect to the dev database
+if you run NODE_ENV=test node index.js it will connect to the test database
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+write first integration tests
+install a library called supertest - to send http requests
+npm i supertest --save-dev
+
+in index.js
+create a server object to export by naming the app.listen and export it
+const server = app.listen....
+module.exports = server
+
+in the tests folder add integration/genres.test.js
+let server;
+const request = require('supertest');
+
+describe('/api/genres',()=>{  //inside here add more test suites
+	beforeEach(()=>{server = require('../../index')})
+	afterEach(() =>{server.close()})  // you need to start and stop the server for each test run 
+									// or you will try to use an already open port		
+
+	describe('GET /', ()=>{
+		it('should return all genres',async ()=>{
+			const res = await request(server).get('api/genres'); //request is a supertest function
+			expect(res.status).toBe(200)
+		})})
+
+})
+ 
+
+
+

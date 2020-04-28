@@ -1,0 +1,61 @@
+test a unit of an application without its external dependancies
+ie database
+-executes fast
+-not a lot of confidence
+
+integration testing 
+tests With external dependancies
+-slower
+-more confidence
+
+End-To-End
+includes user interfaces
+-tool includes selenium
+-slowe
+-brittle, changes in interface or code can break tests
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Tooling
+
+Frameworks include 
+Jasmine, mocha, jest
+mocha is most popular but needs plugins, chai, sinon
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+using jest with example program at \code\writingyourfirsttest
+
+npm init
+npm install jest
+
+change test: to test:"jest --watchAll"
+ in package.json
+ 
+any file that ends with spec or test.js will get executed with 
+node test
+make a folder tests, create a file that ends in test.js so lib.test.js
+You need to organize the tests because they will grow larger than code
+use the describe function to group related tests
+look at lib.test.js for examples
+Single assertion principle says there should only be one test for each "it" clause
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Continuosly running tests
+jest can automatically run tests whenever you make a change
+add --watchAll to test script in package.json
+to use this keep the console open next 
+
+++++++++++++++++++++++++++++++++++++++++++++++
+for unitTesting if the tested function has to make a call you have to make a fake function
+call for inside the function you are testing
+do this by importing the file you want to test, say db with
+const db=require|('./db')
+then overwrite the function within it that makes the external call with a fake function
+
+db.getCustomerSync= function(customerId){
+return { console.log("fake reading function")  //replaces the real function for the sake of test
+id:CustomerId, points:20}}
+
+
+
+

@@ -11,3 +11,26 @@
 {"message":"connected to mongodb","level":"info","timestamp":"2020-04-24T05:21:49.956Z"}
 {"message":"connected to mongodb","level":"info","timestamp":"2020-04-24T05:28:37.611Z"}
 {"message":"connected to mongodb","level":"info","timestamp":"2020-04-24T05:29:54.499Z"}
+{"message":"connected to mongodb","level":"info","timestamp":"2020-04-24T16:05:22.859Z"}
+{"message":"connected to mongodb","level":"info","timestamp":"2020-04-24T16:06:16.044Z"}
+{"message":"connected to mongodb","level":"info","timestamp":"2020-04-28T19:32:16.590Z"}
+{"message":"connected to mongodb","level":"info","timestamp":"2020-04-28T19:32:52.246Z"}
+{"message":"connected to mongodb","level":"info","timestamp":"2020-04-28T19:34:06.836Z"}
+{"message":"connected to mongodb","level":"info","timestamp":"2020-04-28T19:36:19.756Z"}
+{"message":"connected to {config.get('db')}","level":"info","timestamp":"2020-04-28T19:49:25.188Z"}
+{"message":"connected to {config.get('db')}","level":"info","timestamp":"2020-04-28T19:52:55.584Z"}
+{"message":"connected to {config.get('db')}","level":"info","timestamp":"2020-04-28T19:53:03.224Z"}
+{"message":"listening on port 3000","level":"info","timestamp":"2020-04-28T19:54:31.921Z"}
+{"message":"connected to {config.get('db')}","level":"info","timestamp":"2020-04-28T19:54:33.982Z"}
+{"message":"listening on port 3000","level":"info","timestamp":"2020-04-28T19:55:36.467Z"}
+{"message":"connected to {config.get('db')}","level":"info","timestamp":"2020-04-28T19:55:38.521Z"}
+{"message":"listening on port 3000","level":"info","timestamp":"2020-04-28T20:01:31.130Z"}
+{"message":"connected to mongodb://localhost/vidly","level":"info","timestamp":"2020-04-28T20:01:33.186Z"}
+{"message":"listening on port 3000","level":"info","timestamp":"2020-04-28T21:15:42.644Z"}
+{"message":"connected to mongodb://localhost/vidly","level":"info","timestamp":"2020-04-28T21:15:44.712Z"}
+{"message":"listening on port 3000","level":"info","timestamp":"2020-04-28T21:30:00.798Z"}
+{"message":"listening on port 3000","level":"info","timestamp":"2020-04-28T21:30:46.102Z"}
+{"message":"listening on port 3000","level":"info","timestamp":"2020-04-28T21:34:18.449Z"}
+{"message":"listening on port 3000","level":"info","timestamp":"2020-04-28T21:36:00.197Z"}
+{"message":"listening on port 3000","level":"info","timestamp":"2020-04-28T21:38:43.440Z"}
+{"message":"connected to mongodb://localhost/vidly","level":"info","timestamp":"2020-04-28T21:38:45.502Z"}
