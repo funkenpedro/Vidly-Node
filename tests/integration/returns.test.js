@@ -17,7 +17,7 @@ const { User } = require("../../models/user");
 const mongoose = require("mongoose");
 const request = require("supertest");
 const moment = require("moment");
-
+jest.setTimeout(9999999);
 describe("/api/returns", () => {
   let customerId;
   let server;
@@ -47,11 +47,11 @@ describe("/api/returns", () => {
     await movie.save();
     rental = new Rental({
       customer: {
-        name: "232323",
-        phone: "1234567",
+        name: "12345",
+        phone: "12345",
         _id: customerId,
       },
-      movie: { _id: movieId, title: "123456", dailyRentalRate: 2 },
+      movie: { _id: movieId, title: "12345", dailyRentalRate: 2 },
     });
     await rental.save();
   });
@@ -60,7 +60,7 @@ describe("/api/returns", () => {
     // you need to start and stop the server for each test run
     // or you will try to use an already open port
     await Rental.remove({}); //this is here to clean up after tests creation of documents in database
-    await Movie.remove({});
+    //await Movie.remove({});
   });
   it("should return 401 if client is not logged in", async () => {
     token = "";
@@ -70,8 +70,10 @@ describe("/api/returns", () => {
   it("should return 400 if customerId is not provided", async () => {
     customerId = "";
     const res = await exec();
+
     expect(res.status).toBe(400);
   });
+
   it("should return 400 if movieId is not provided", async () => {
     movieId = "";
     const res = await exec();
