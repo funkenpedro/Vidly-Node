@@ -49,6 +49,54 @@ describe('/api/genres',()=>{  //inside here add more test suites
 
 })
  
+the genres test suite will include other test suitess
+for  GET,POST , PUT etc..
 
+++++++++++++++++++++++++++++++++++++++++++
+Populate Test Database
+in genres.test.js add
+const {Genre} = require('../../models/genre)
+add
+await Genre.collection .insertMany([
+	{name: 'genre1'}
+	{name: 'genre2'}
+])
+
+expect(res.body.length).toBe(2)
+//every time you run this test you add two more items to database so you should remove them
+add the following to the afterEach(), mark that as async
+await Genre.remove({});
+
+++++++++++++++++++++++++++++++++++++++++++++
+validating objectIDs
+for testing whether we got the right answer for sending invalid id
+we have to add middleware to return 404 instead of 500 for internal server error
+the file added is validateObjectId.js
+
+
+++++++++++++++++++++++++++++++++++++++++++
+Refactoring for cleaner tests
+appended simplification to end of file genres.test.js
+
++++++++++++++++++++++++++++++++++++++++++++
+Testing the auth middleware
+
+there are multiple paths in auth.js
+that get tested in auth.test.js
+
++++++++++++++++++++++++++++++++++++++++++
+to check for proper decoded password you need to do a unit test
+tests>unittests/middleware>auth.test.js
+
+++++++++++++++++++++++++++++++++++++++++
+using jest to check for coverage
+
+add --coverage to test item in package.json
+you can check the coverage of your tests
+you can see the report in vidly\coverage\...
+there's an index.html
+exclude the coverage files from git, in gitignore
+
+the undone exercise is to test the put and delete routes
 
 

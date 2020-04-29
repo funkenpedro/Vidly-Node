@@ -3,14 +3,14 @@ const router = express.Router();
 const { Genre, validate } = require("../models/genre");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
-
+const validateObjectId = require("../middleware/validateObjecId");
 router.get("/", async (req, res) => {
   //throw new Error("could not get the genres");
   const genres = await Genre.find();
   res.send(genres);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", validateObjectId, async (req, res) => {
   const genre = await Genre.find({ _id: req.params.id });
   if (!genre) return res.status(404).send("course was not found");
   res.send(genre);
