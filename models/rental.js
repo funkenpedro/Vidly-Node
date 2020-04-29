@@ -29,7 +29,6 @@ const rentalSchema = new mongoose.Schema({
   },
   movie: {
     type: new mongoose.Schema({
-      // custom schema replaces movie { type: movieSchema, required: true },
       title: {
         type: String,
         required: true,
@@ -43,20 +42,20 @@ const rentalSchema = new mongoose.Schema({
         min: 0,
         max: 255,
       },
-      dateOut: {
-        type: Date,
-        required: true,
-        default: Date.now,
-      },
-      dateReturned: {
-        type: Date,
-      },
-      rentalFee: {
-        type: Number,
-        min: 0,
-      },
     }),
     required: true,
+  },
+  dateOut: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  dateReturned: {
+    type: Date,
+  },
+  rentalFee: {
+    type: Number,
+    min: 0,
   },
 });
 /*function validateMovie(movie) {

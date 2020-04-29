@@ -1,0 +1,36 @@
+Write the tests first
+then the code.
+
+
+++++++++++++++++++++++++++++
+first exercise is returning a movie
+the thought is to create a new endpoint 
+in routes make returns.js
+//post /api/returns {customerId, movie}
+the test cases
+//return 401 if client is not logged  in
+// return 400 if custoerId is not proviede
+// return 400 if mmovieID is not provided
+// return 404 if no rental is found for this customer and movie
+// return 400 if rental already processed
+// return 200 if valid request
+// set the return date
+// calculate the rental fee
+// increaset the stock
+// return the rental to the client
+
+in Integration add a file returns.test.js
+
+
++++++++++++++++++++++++++++++++++++
+static Methods in mongoose
+
+const rental = Rental.lookup(customerId, movieId){
+	return this.findOne({
+		'customeer../.
+		'moiveiId:movieID'
+	})}
+
+create a static method with 
+rentalSchema.statics.lookup = function(customerId, movieId){
+}
